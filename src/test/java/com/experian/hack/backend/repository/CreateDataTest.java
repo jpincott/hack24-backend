@@ -38,5 +38,16 @@ public class CreateDataTest {
         workers.save(alan);
     }
 
+    @Test
+    public void shouldSaveData2() {
+
+        Worker me = new Worker().setFirstName("me").setLastName("me").setEmail("me@me.com");
+        Opportunity work = new Opportunity().setDescription("An office");
+
+        me.assignTo(work);
+
+        workers.save(me);
+    }
+
 }
 
