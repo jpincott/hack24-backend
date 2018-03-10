@@ -24,8 +24,8 @@ public class Controller {
     @GetMapping("/me/jobs")
     public Set<Opportunity> getJobs(@RequestHeader String email) {
 
-        Optional<Worker> workers = repo.findByEmail(email);
-        return workers.map(Worker::getJobs).orElse(Collections.emptySet());
+        Optional<Worker> worker = repo.findByEmail(email);
+        return worker.map(Worker::getJobs).orElse(Collections.emptySet());
 
     }
 }

@@ -16,10 +16,8 @@ public class Job {
 
     @Id @GeneratedValue
     private Long id;
-
     @StartNode
     private Worker worker;
-
     @EndNode
     private Opportunity opportunity;
 

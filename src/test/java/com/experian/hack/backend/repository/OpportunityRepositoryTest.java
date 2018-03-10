@@ -16,15 +16,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 public class OpportunityRepositoryTest {
 
-    @Autowired
-    private OpportunityRepository repo;
 
-    @Test
-    public void shouldSaveOpportunity() {
-        Opportunity golden = new Opportunity().setDescription("Once in a lifetime!");
-        assertThat(golden.getId(), is(nullValue()));
 
-        golden = repo.save(golden);
-        assertThat(golden.getId(), is(notNullValue()));
-    }
+
 }

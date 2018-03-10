@@ -3,10 +3,7 @@ package com.experian.hack.backend.node;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.neo4j.ogm.annotation.GeneratedValue;
-import org.neo4j.ogm.annotation.Id;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,11 +16,16 @@ public class Worker {
     private Long id;
 
     private String firstName;
-    private String lastName;    
+    private String lastName;
     private String phone;
+
+    @Index(unique = true)
     private String email;
 
     @Relationship(type = "ASSIGNED_TO")
     private Set<Opportunity> jobs = new HashSet<>();
 
+    public void assignTo(Opportunity opportunity) {
+        jobs.add(opportunity);
+    }
 }

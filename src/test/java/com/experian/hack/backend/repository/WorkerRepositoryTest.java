@@ -25,22 +25,14 @@ public class WorkerRepositoryTest {
     private WorkerRepository repo;
 
     @Test
-    public void shouldSaveWorker() {
-        Worker alan = new Worker().setFirstName("Alan").setLastName("Alanson").setEmail("alan@alanson.org");
-        assertThat(alan.getId(), is(nullValue()));
-
-        alan = repo.save(alan);
-        assertThat(alan.getId(), is(notNullValue()));
-    }
-
-    @Test
     public void shouldFindByEmail() {
 
-        String email = "me@me.com";
+        String email = "alan@alanson.org";
 
         Optional<Worker> worker = repo.findByEmail(email);
 
         assertThat(worker.isPresent(), is(true));
         assertThat(worker.get().getEmail(), is(email));
+        assertThat(worker.get().getJobs(), hasSize(1));
     }
 }
