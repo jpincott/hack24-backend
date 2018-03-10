@@ -36,6 +36,8 @@ public class WorkerRepositoryTest {
     @Test
     public void shouldFindByEmail() {
 
+        repo.save(new Worker().setEmail("me@me.com"));
+
         String email = "me@me.com";
 
         Optional<Worker> worker = repo.findByEmail(email);
