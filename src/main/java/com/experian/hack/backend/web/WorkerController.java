@@ -55,4 +55,10 @@ public class WorkerController {
         SmsMessageRequest smsMessageRequest = new SmsMessageRequest(phoneNumber, "Job has been changed!");
         this.serviceFactory.getMessagingService().sendMessage(email, smsMessageRequest);
     }
+
+    @GetMapping("/me/jobs/distance")
+    public int getDistanceForPeriod(@RequestHeader String email, @RequestParam String start, @RequestParam String end) {
+        Set<Opportunity> jobs = opportunities.findByStartIsBetweenAndWorkerEmail(start, end, email);
+        return 0;
+    }
 }
