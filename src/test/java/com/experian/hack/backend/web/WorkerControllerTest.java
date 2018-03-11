@@ -69,7 +69,7 @@ public class WorkerControllerTest {
         ArgumentCaptor<SmsMessageRequest> argumentCaptor = ArgumentCaptor.forClass(SmsMessageRequest.class);
 
         Mockito.verify(serviceFactory.getMessagingService()).sendMessage(
-                eq("email@example.com"),
+                eq("EX0252161"),
                 argumentCaptor.capture()
         );
 

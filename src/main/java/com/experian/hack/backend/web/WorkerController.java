@@ -49,11 +49,11 @@ public class WorkerController {
     }
 
     @PostMapping("/me/swaprequest/{id}")
-    public void swapRequestAndNotify(@PathVariable Long id, @RequestHeader String email) throws EsendexException {
+    public void swapRequestAndNotify(@PathVariable Long id) throws EsendexException {
         String phoneNumber = workers.findPhoneNumberByOpportunityId(id);
 
         SmsMessageRequest smsMessageRequest = new SmsMessageRequest(phoneNumber, "Job has been changed!");
-        this.serviceFactory.getMessagingService().sendMessage(email, smsMessageRequest);
+        this.serviceFactory.getMessagingService().sendMessage("EX0252161", smsMessageRequest);
     }
 
     @GetMapping("/me/jobs/distance")
