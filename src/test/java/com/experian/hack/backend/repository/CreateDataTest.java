@@ -52,7 +52,7 @@ public class CreateDataTest {
                     .setFirstName(firstName)
                     .setLastName(lastName)
                     .setEmail(String.format("%s.%s@%s", firstName, lastName, faker.internet().domainName()))
-                    .setPhone("+447966064531")
+                    .setPhone("07514107269")
             );
         }
     }
@@ -87,7 +87,7 @@ public class CreateDataTest {
                     .setFirstName(firstName)
                     .setLastName(lastName)
                     .setEmail(String.format("%s.%s@%s", firstName, lastName, faker.internet().domainName()))
-                    .setPhone("+447966064531")
+                    .setPhone("07514107269")
                     .setLatitude(faker.address().latitude())
                     .setLongitude(faker.address().longitude())
                     .setClearance(faker.number().numberBetween(0, 5)));
