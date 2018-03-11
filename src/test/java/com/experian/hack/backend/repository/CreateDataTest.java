@@ -5,6 +5,7 @@ import com.experian.hack.backend.node.Opportunity;
 import com.experian.hack.backend.node.Worker;
 import com.github.javafaker.Faker;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -91,21 +92,27 @@ public class CreateDataTest {
                     .setFirstName(firstName)
                     .setLastName(lastName)
                     .setEmail(String.format("%s.%s@%s", firstName, lastName, faker.internet().domainName()))
-                    .setPhone(faker.phoneNumber().cellPhone())
+                    .setPhone("+447966064531")
             );
         }
     }
 
     public void createOpportunities() {
         Faker faker = new Faker(Locale.UK, new Random(11032018L));
-        Date start = Date.from(LocalDateTime.parse("2018-03-11T00:00").toInstant(ZoneOffset.UTC));
+        Date start = Date.from(LocalDateTime.parse("2018-03-01T00:00").toInstant(ZoneOffset.UTC));
         opportunities.deleteAll();
-        for (int i = 50; i-- > 0; ) {
+        for (int i = 200; i-- > 0; ) {
             opportunities.save(new Opportunity()
-                    .setDescription(faker.options().option("light", "medium", "heavy"))
-                    .setStart(faker.date().future(14, TimeUnit.DAYS, start).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                    .setDescription(String.format("%s %s",
+                            faker.options().option("light", "medium", "heavy"),
+                            faker.options().option("soiling", "odour", "flooding")
+                    ))
+                    .setStart(faker.date().future(28, TimeUnit.DAYS, start).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                     .setLocation(faker.address().fullAddress())
-                    .setValue(faker.number().numberBetween(10,15))
+                    .setValue(faker.number().numberBetween(10, 15))
+                    .setLatitude(faker.address().latitude())
+                    .setLongitude(faker.address().longitude())
+                    .setClearance(faker.number().numberBetween(0,5))
             );
         }
     }
@@ -113,14 +120,17 @@ public class CreateDataTest {
     public void createWorkers() {
         Faker faker = new Faker(Locale.UK, new Random(260685L));
         workers.deleteAll();
-        for (int i = 10; i-- > 0; ) {
+        for (int i = 15; i-- > 0; ) {
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
             workers.save(new Worker()
                     .setFirstName(firstName)
                     .setLastName(lastName)
                     .setEmail(String.format("%s.%s@%s", firstName, lastName, faker.internet().domainName()))
-                    .setPhone(faker.phoneNumber().cellPhone()));
+                    .setPhone("+447966064531"))
+                    .setLatitude(faker.address().latitude())
+                    .setLongitude(faker.address().longitude())
+                    .setClearance(faker.number().numberBetween(0,5));
         }
     }
 
@@ -149,7 +159,7 @@ public class CreateDataTest {
         linkOpportunitiesToWorkers();
     }
 
-//    @Test
+    @Test
     public void createGraph() {
         deleteGraph();
         createNodes();

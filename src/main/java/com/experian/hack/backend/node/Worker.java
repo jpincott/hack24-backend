@@ -22,6 +22,11 @@ public class Worker {
     @Index(unique = true)
     private String email;
 
+    private String latitude;
+    private String longitude;
+
+    private int clearance;
+
     @Relationship(type = "ASSIGNED_TO")
     private Set<Opportunity> jobs = new HashSet<>();
 

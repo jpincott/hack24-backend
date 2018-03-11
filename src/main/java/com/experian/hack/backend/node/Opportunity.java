@@ -18,9 +18,16 @@ public class Opportunity {
     @Id @GeneratedValue
     private Long id;
 
-    private String description;
     private LocalDateTime start;
+
+    private String description;
     private String location;
+
     private Integer value;
-    
+
+    private String latitude;
+    private String longitude;
+
+    private int clearance;
+
 }
