@@ -31,6 +31,7 @@ public class Worker {
     private Set<Opportunity> jobs = new HashSet<>();
 
     public void assignTo(Opportunity opportunity) {
-        jobs.add(opportunity);
+        if (clearance >= opportunity.getClearance())
+            jobs.add(opportunity);
     }
 }
