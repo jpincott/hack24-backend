@@ -21,5 +21,6 @@ public class Opportunity {
     private String description;
     private LocalDateTime start;
     private String location;
+    private Integer value;
     
 }

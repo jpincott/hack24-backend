@@ -37,7 +37,10 @@ public class WorkerControllerTest {
         Mockito.when(mockRepository.findByEmail("email@example.com")).thenReturn(Optional.empty());
 
         mvc.perform(get("/workers/me/jobs")
-                .header("email", "email@example.com"))
+                .header("email", "email@example.com")
+                .param("start", "2018-03-11T00:00")
+                .param("end", "2018-03-12T00:00")
+        )
                 .andDo(print())
                 .andExpect(status().isOk());
 

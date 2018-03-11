@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toSet;
 
 @RestController
@@ -30,27 +31,12 @@ public class WorkerController {
     }
 
     @GetMapping("/me/jobs")
-    public Set<Opportunity> getJobs(
-            @RequestHeader String email,
-            @RequestParam(required = false) String start,
-            @RequestParam(required = false) String end) {
-
-        Set<Opportunity> jobs = opportunities.findByStartIsBetweenAndWorkerEmail(start, end, email);
-//        Optional<Worker> worker = workers.findByEmail(email);
-//        Set<Opportunity> jobs = worker.map(Worker::getJobs).orElse(emptySet()).stream()
-//                .filter(isAfter(LocalDateTime.parse(start)))
-//                .filter(isBefore(LocalDateTime.parse(end)))
-//                .collect(toSet());
-
-        return jobs;
+    public Set<Opportunity> getJobs(@RequestHeader String email, @RequestParam String start, @RequestParam String end) {
+        return opportunities.findByStartIsBetweenAndWorkerEmail(start, end, email);
     }
 
-    private Predicate<? super Opportunity> isAfter(LocalDateTime start) {
-        return o -> start.isBefore(o.getStart());
+    @GetMapping("/me/jobs/value")
+    public int getValueForPeriod(@RequestHeader String email, @RequestParam String start, @RequestParam String end) {
+        return opportunities.sumValueByStartIsBetweenAndWorkerEmail(start, end, email);
     }
-
-    private Predicate<? super Opportunity> isBefore(LocalDateTime end) {
-        return o -> end.isAfter(o.getStart());
-    }
-
 }

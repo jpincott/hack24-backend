@@ -4,7 +4,6 @@ import com.experian.hack.backend.node.Customer;
 import com.experian.hack.backend.node.Opportunity;
 import com.experian.hack.backend.node.Worker;
 import com.github.javafaker.Faker;
-import com.github.javafaker.Name;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,17 +15,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import static java.time.LocalDateTime.*;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static java.time.LocalDateTime.parse;
 
 
+@Ignore
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CreateDataTest {
@@ -38,8 +36,6 @@ public class CreateDataTest {
     @Autowired
     private CustomerRepository customers;
 
-    @Test
-    @Ignore
     public void shouldSaveData() {
 
         Worker alan = new Worker().setFirstName("Alan").setLastName("Alanson").setEmail("alan@alanson.org");
@@ -69,16 +65,12 @@ public class CreateDataTest {
         workers.save(clive);
     }
 
-    @Test
-//    @Ignore
     public void shouldDeleteAll() {
         workers.deleteAll();
         opportunities.deleteAll();
         customers.deleteAll();
     }
 
-    @Test
-    @Ignore
     public void shouldSaveData2() {
 
         Worker me = new Worker().setFirstName("me").setLastName("me").setEmail("me@me.com");
@@ -90,7 +82,6 @@ public class CreateDataTest {
         workers.save(me);
     }
 
-    @Test
     public void createCustomers() {
         Faker faker = new Faker(Locale.UK, new Random(23081978L));
         customers.deleteAll();
@@ -106,7 +97,6 @@ public class CreateDataTest {
         }
     }
 
-    @Test
     public void createOpportunities() {
         Faker faker = new Faker(Locale.UK, new Random(11032018L));
         Date start = Date.from(LocalDateTime.parse("2018-03-11T00:00").toInstant(ZoneOffset.UTC));
@@ -116,11 +106,11 @@ public class CreateDataTest {
                     .setDescription(faker.options().option("light", "medium", "heavy"))
                     .setStart(faker.date().future(14, TimeUnit.DAYS, start).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                     .setLocation(faker.address().fullAddress())
+                    .setValue(faker.number().numberBetween(10,15))
             );
         }
     }
 
-    @Test
     public void createWorkers() {
         Faker faker = new Faker(Locale.UK, new Random(260685L));
         workers.deleteAll();
@@ -135,7 +125,6 @@ public class CreateDataTest {
         }
     }
 
-    @Test
     public void linkOpportunitiesToCustomers() {
         Random random = new Random(23052018L);
         List<Customer> customers = IterableUtils.toList(this.customers.findAll());
@@ -143,7 +132,6 @@ public class CreateDataTest {
         this.customers.saveAll(customers);
     }
 
-    @Test
     public void linkOpportunitiesToWorkers() {
         Random random = new Random(3081981L);
         List<Worker> workers = IterableUtils.toList(this.workers.findAll());
@@ -162,7 +150,7 @@ public class CreateDataTest {
         linkOpportunitiesToWorkers();
     }
 
-    @Test
+//    @Test
     public void createGraph() {
         shouldDeleteAll();
         createNodes();
