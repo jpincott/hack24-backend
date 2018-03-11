@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class EsendexConfiguration {
     @Bean
     public BasicServiceFactory serviceFactory(
-            @Value("esendex.username") String username,
-            @Value("esendex.password") String password) {
+            @Value("${esendex.username}") String username,
+            @Value("${esendex.password}") String password) {
         return ServiceFactory.createBasicAuthenticatingFactory(new UserPassword(username, password));
     }
 }
