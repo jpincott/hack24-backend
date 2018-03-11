@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import static java.time.LocalDateTime.parse;
 
 
-@Ignore
+//@Ignore
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CreateDataTest {
@@ -36,50 +36,10 @@ public class CreateDataTest {
     @Autowired
     private CustomerRepository customers;
 
-    public void shouldSaveData() {
-
-        Worker alan = new Worker().setFirstName("Alan").setLastName("Alanson").setEmail("alan@alanson.org");
-        Worker bob = new Worker().setFirstName("Bob").setLastName("Bobson").setEmail("bob@bobson.org");
-        Worker clive = new Worker().setFirstName("Clive").setLastName("Cliveson").setEmail("clive@cliveson.org");
-
-        Opportunity pub = new Opportunity().setDescription("The local pub").setStart(parse("2018-03-10T10:00"));
-        Opportunity house = new Opportunity().setDescription("Someone's house").setStart(parse("2018-03-10T12:00"));
-        Opportunity school = new Opportunity().setDescription("A school").setStart(parse("2018-03-10T14:00"));
-
-        Customer zoe = new Customer().setFirstName("zoe").setEmail("zoe@example.com");
-        Customer yolanda = new Customer().setFirstName("yolanda").setEmail("yolanda@example.com");
-
-        zoe.create(pub);
-        yolanda.create(house);
-        yolanda.create(school);
-
-        customers.save(zoe);
-        customers.save(yolanda);
-
-        alan.assignTo(pub);
-        bob.assignTo(house);
-        clive.assignTo(school);
-
-        workers.save(alan);
-        workers.save(bob);
-        workers.save(clive);
-    }
-
     public void deleteGraph() {
         workers.deleteAll();
         opportunities.deleteAll();
         customers.deleteAll();
-    }
-
-    public void shouldSaveData2() {
-
-        Worker me = new Worker().setFirstName("me").setLastName("me").setEmail("me@me.com");
-
-        me.assignTo(new Opportunity().setDescription("Office 1").setStart(LocalDateTime.parse("2018-03-10T10:00")));
-        me.assignTo(new Opportunity().setDescription("Office 2").setStart(LocalDateTime.parse("2018-03-11T10:00")));
-        me.assignTo(new Opportunity().setDescription("Office 3").setStart(LocalDateTime.parse("2018-03-12T10:00")));
-
-        workers.save(me);
     }
 
     public void createCustomers() {
@@ -112,7 +72,7 @@ public class CreateDataTest {
                     .setValue(faker.number().numberBetween(10, 15))
                     .setLatitude(faker.address().latitude())
                     .setLongitude(faker.address().longitude())
-                    .setClearance(faker.number().numberBetween(0,5))
+                    .setClearance(faker.number().numberBetween(0, 5))
             );
         }
     }
@@ -127,10 +87,10 @@ public class CreateDataTest {
                     .setFirstName(firstName)
                     .setLastName(lastName)
                     .setEmail(String.format("%s.%s@%s", firstName, lastName, faker.internet().domainName()))
-                    .setPhone("+447966064531"))
+                    .setPhone("+447966064531")
                     .setLatitude(faker.address().latitude())
                     .setLongitude(faker.address().longitude())
-                    .setClearance(faker.number().numberBetween(0,5));
+                    .setClearance(faker.number().numberBetween(0, 5)));
         }
     }
 
