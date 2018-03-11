@@ -31,12 +31,12 @@ public class OpportunityRepositoryTest {
     public void testStartBetween() {
 
         List<Opportunity> saved = new ArrayList<>(Arrays.asList(
-                repo.save(new Opportunity().setDescription("test1").setStart(LocalDateTime.parse("2018-03-10T10:00"))),
-                repo.save(new Opportunity().setDescription("test2").setStart(LocalDateTime.parse("2018-03-10T12:00"))),
-                repo.save(new Opportunity().setDescription("test3").setStart(LocalDateTime.parse("2018-03-10T14:00")))
+                repo.save(new Opportunity().setDescription("test1").setStart(LocalDateTime.parse("2016-03-10T10:00"))),
+                repo.save(new Opportunity().setDescription("test2").setStart(LocalDateTime.parse("2016-03-10T12:00"))),
+                repo.save(new Opportunity().setDescription("test3").setStart(LocalDateTime.parse("2016-03-10T14:00")))
         ));
 
-        Set<Opportunity> found = repo.findByStartIsBetween(LocalDateTime.parse("2018-03-10T11:00"), LocalDateTime.parse("2018-03-10T13:00"));
+        Set<Opportunity> found = repo.findByStartIsBetween(LocalDateTime.parse("2016-03-10T11:00"), LocalDateTime.parse("2016-03-10T13:00"));
         repo.deleteAll(saved);
 
         assertThat(found, hasSize(1));
