@@ -3,18 +3,21 @@ package com.experian.hack.backend.repository;
 import com.experian.hack.backend.node.Customer;
 import com.experian.hack.backend.node.Opportunity;
 import com.experian.hack.backend.node.Worker;
+import com.github.javafaker.Faker;
+import com.github.javafaker.Name;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.neo4j.util.IterableUtils;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static java.time.LocalDateTime.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -22,6 +25,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -66,7 +70,7 @@ public class CreateDataTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void shouldDeleteAll() {
         workers.deleteAll();
         opportunities.deleteAll();
@@ -86,30 +90,83 @@ public class CreateDataTest {
         workers.save(me);
     }
 
+    @Test
+    public void createCustomers() {
+        Faker faker = new Faker(Locale.UK, new Random(23081978L));
+        customers.deleteAll();
+        for (int i = 10; i-- > 0; ) {
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            customers.save(new Customer()
+                    .setFirstName(firstName)
+                    .setLastName(lastName)
+                    .setEmail(String.format("%s.%s@%s", firstName, lastName, faker.internet().domainName()))
+                    .setPhone(faker.phoneNumber().cellPhone())
+            );
+        }
+    }
 
     @Test
-    public void testStartBetweenAndAssignedTo() {
+    public void createOpportunities() {
+        Faker faker = new Faker(Locale.UK, new Random(11032018L));
+        Date start = Date.from(LocalDateTime.parse("2018-03-11T00:00").toInstant(ZoneOffset.UTC));
+        opportunities.deleteAll();
+        for (int i = 50; i-- > 0; ) {
+            opportunities.save(new Opportunity()
+                    .setDescription(faker.options().option("light", "medium", "heavy"))
+                    .setStart(faker.date().future(14, TimeUnit.DAYS, start).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                    .setLocation(faker.address().fullAddress())
+            );
+        }
+    }
 
-        Opportunity o1 = this.opportunities.save(new Opportunity().setDescription("test1").setStart(parse("2017-03-10T10:00")));
-        Opportunity o2 = this.opportunities.save(new Opportunity().setDescription("test2").setStart(parse("2017-03-10T12:00")));
-        Opportunity o3 = this.opportunities.save(new Opportunity().setDescription("test3").setStart(parse("2017-03-10T14:00")));
+    @Test
+    public void createWorkers() {
+        Faker faker = new Faker(Locale.UK, new Random(260685L));
+        workers.deleteAll();
+        for (int i = 10; i-- > 0; ) {
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            workers.save(new Worker()
+                    .setFirstName(firstName)
+                    .setLastName(lastName)
+                    .setEmail(String.format("%s.%s@%s", firstName, lastName, faker.internet().domainName()))
+                    .setPhone(faker.phoneNumber().cellPhone()));
+        }
+    }
 
-        Worker w1 = this.workers.save(new Worker().setEmail("w1@example.com"));
-        Worker w2 = this.workers.save(new Worker().setEmail("w2@example.com"));
+    @Test
+    public void linkOpportunitiesToCustomers() {
+        Random random = new Random(23052018L);
+        List<Customer> customers = IterableUtils.toList(this.customers.findAll());
+        opportunities.findAll().forEach(c -> customers.get(random.nextInt(customers.size())).create(c));
+        this.customers.saveAll(customers);
+    }
 
-        Set<Opportunity> found = this.opportunities.findByStartIsBetween(parse("2017-03-10T11:00"), parse("2017-03-10T15:00"));
-        assertThat(found, hasSize(2));
+    @Test
+    public void linkOpportunitiesToWorkers() {
+        Random random = new Random(3081981L);
+        List<Worker> workers = IterableUtils.toList(this.workers.findAll());
+        opportunities.findAll().forEach(o -> workers.get(random.nextInt(workers.size())).assignTo(o));
+        this.workers.saveAll(workers);
+    }
 
-        found = this.opportunities.findByStartIsBetweenAndWorkerEmail("2017-03-10T11:00", "2017-03-10T15:00", "w1@example.com");
-        assertThat(found, hasSize(0));
+    public void createNodes() {
+        createCustomers();
+        createOpportunities();
+        createWorkers();
+    }
 
-        w1.assignTo(o2);
-        w1 = workers.save(w1);
-        found = this.opportunities.findByStartIsBetweenAndWorkerEmail("2017-03-10T11:00", "2017-03-10T15:00", "w1@example.com");
-        assertThat(found, hasSize(1));
+    public void createRelationships() {
+        linkOpportunitiesToCustomers();
+        linkOpportunitiesToWorkers();
+    }
 
-        this.opportunities.deleteAll(Arrays.asList(o1,o2,o3));
-        this.workers.deleteAll(Arrays.asList(w1,w2));
+    @Test
+    public void createGraph() {
+        shouldDeleteAll();
+        createNodes();
+        createRelationships();
     }
 }
 

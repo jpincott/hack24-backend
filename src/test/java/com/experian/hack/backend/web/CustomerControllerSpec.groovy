@@ -33,7 +33,7 @@ class CustomerControllerSpec extends Specification {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content('{"description":"A cool job"}')
         ).andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
 
     }
 }
