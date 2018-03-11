@@ -27,12 +27,14 @@ public class WorkerRepositoryTest {
     @Test
     public void shouldFindByEmail() {
 
-        String email = "alan@alanson.org";
+        String email = "email@example.com";
+        repo.save(new Worker().setEmail(email));
 
-        Optional<Worker> worker = repo.findByEmail(email);
+        Optional<Worker> found = repo.findByEmail(email);
+        assertThat(found.isPresent(), is(true));
+        assertThat(found.get().getEmail(), is(email));
+        assertThat(found.get().getJobs(), hasSize(0));
 
-        assertThat(worker.isPresent(), is(true));
-        assertThat(worker.get().getEmail(), is(email));
-        assertThat(worker.get().getJobs(), hasSize(1));
+        found.ifPresent(repo::delete);
     }
 }

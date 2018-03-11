@@ -22,6 +22,7 @@ public class PersistenceContext {
     public org.neo4j.ogm.config.Configuration configuration() {
         return new org.neo4j.ogm.config.Configuration.Builder()
                 .uri("bolt://192.168.99.100")
+                .autoIndex("assert")
                 .build();
     }
 }
