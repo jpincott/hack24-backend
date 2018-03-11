@@ -2,6 +2,7 @@ package com.experian.hack.backend.repository;
 
 import com.experian.hack.backend.node.Opportunity;
 import com.experian.hack.backend.node.Worker;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.Set;
 import static java.time.LocalDateTime.parse;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @SpringBootTest
@@ -26,6 +28,13 @@ public class CustomQueryTest {
     private WorkerRepository workers;
     @Autowired
     private CustomerRepository customers;
+
+    @After
+    public void tearDown() {
+        opportunities.deleteAll();
+        workers.deleteAll();
+        customers.deleteAll();
+    }
 
     @Test
     public void testStartBetweenAndAssignedTo() {
@@ -54,6 +63,21 @@ public class CustomQueryTest {
 
         this.opportunities.deleteAll(Arrays.asList(o1,o2,o3));
         this.workers.deleteAll(Arrays.asList(w1,w2));
+    }
+
+    @Test
+    public void findWorkersByOpportunity() {
+        Opportunity opportunity = new Opportunity();
+
+        opportunity = opportunities.save(opportunity);
+
+        Worker worker = new Worker().setEmail("email@example.com").setPhone("123456789");
+
+        worker.assignTo(opportunity);
+
+        worker = workers.save(worker);
+
+        assertEquals(worker.getPhone(), workers.findPhoneNumberByOpportunityId(opportunity.getId()));
     }
 }
 

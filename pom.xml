@@ -68,6 +68,13 @@
             <version>0.14</version>
 			<scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>esendex.sdk</groupId>
+            <artifactId>java</artifactId>
+            <version>4.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/esendex-java-sdk-4.0.0.jar</systemPath>
+        </dependency>
 	</dependencies>
 
 	<build>
