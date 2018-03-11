@@ -5,7 +5,6 @@ import com.experian.hack.backend.node.Opportunity;
 import com.experian.hack.backend.node.Worker;
 import com.github.javafaker.Faker;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -65,7 +64,7 @@ public class CreateDataTest {
         workers.save(clive);
     }
 
-    public void shouldDeleteAll() {
+    public void deleteGraph() {
         workers.deleteAll();
         opportunities.deleteAll();
         customers.deleteAll();
@@ -152,7 +151,7 @@ public class CreateDataTest {
 
 //    @Test
     public void createGraph() {
-        shouldDeleteAll();
+        deleteGraph();
         createNodes();
         createRelationships();
     }
